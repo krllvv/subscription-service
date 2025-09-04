@@ -1,0 +1,238 @@
+basePath: /
+definitions:
+  model.SubRequest:
+    properties:
+      end_date:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+  model.Subscription:
+    properties:
+      end_date:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+  utils.ErrorResponse:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+    type: object
+info:
+  contact: {}
+  description: REST service for aggregating data about users' online subscriptions
+  title: Subscription Service API
+  version: "1.0"
+paths:
+  /subscription/{subID}:
+    delete:
+      description: Delete subscription by ID
+      parameters:
+      - description: Subscription ID
+        format: uuid
+        in: path
+        name: subID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully deleted subscription
+        "400":
+          description: Invalid subscription ID
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Subscription not found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Delete Subscription
+      tags:
+      - Subscriptions
+    get:
+      description: Get subscription by ID
+      parameters:
+      - description: Subscription ID
+        format: uuid
+        in: path
+        name: subID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Requested subscription
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Invalid subscription ID
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Subscription not found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get Subscription
+      tags:
+      - Subscriptions
+    put:
+      consumes:
+      - application/json
+      description: Update subscription by ID
+      parameters:
+      - description: Subscription ID
+        format: uuid
+        in: path
+        name: subID
+        required: true
+        type: string
+      - description: Updated subscription payload
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/model.SubRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated subscription
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Invalid subscription ID or validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Subscription not found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Update subscription
+      tags:
+      - Subscriptions
+  /subscriptions:
+    get:
+      description: Get list of all subscriptions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: A list of subscriptions
+          schema:
+            items:
+              $ref: '#/definitions/model.Subscription'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get All Subscription
+      tags:
+      - Subscriptions
+    post:
+      consumes:
+      - application/json
+      description: Create a new subscription record. Field 'end_data' is optional
+      parameters:
+      - description: Subscription payload
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/model.SubRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created subscription
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Validation error or invalid request body
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Create Subscription
+      tags:
+      - Subscriptions
+  /subscriptions/total:
+    get:
+      description: Get the total cost of subscriptions for a given period. Optional
+        filters for user and subscription name
+      parameters:
+      - description: Start date of the period (MM-YYYY)
+        example: '"01-2025"'
+        in: query
+        name: start_date
+        required: true
+        type: string
+      - description: End date of the period (MM-YYYY)
+        example: '"12-2025"'
+        in: query
+        name: end_date
+        required: true
+        type: string
+      - description: Filter by User ID (UUID)
+        format: uuid
+        in: query
+        name: user_id
+        type: string
+      - description: Filter by subscription name
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total sum
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid parameters
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Calculate Total Sum
+      tags:
+      - Subscriptions
+swagger: "2.0"
