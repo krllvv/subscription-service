@@ -4,10 +4,10 @@ definitions:
     properties:
       end_date:
         type: string
-      name:
-        type: string
       price:
         type: integer
+      service_name:
+        type: string
       start_date:
         type: string
       user_id:
@@ -19,10 +19,10 @@ definitions:
         type: string
       id:
         type: string
-      name:
-        type: string
       price:
         type: integer
+      service_name:
+        type: string
       start_date:
         type: string
       user_id:
@@ -213,7 +213,7 @@ paths:
         type: string
       - description: Filter by subscription name
         in: query
-        name: name
+        name: service_name
         type: string
       produces:
       - application/json

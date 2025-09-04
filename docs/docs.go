@@ -274,7 +274,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Filter by subscription name",
-                        "name": "name",
+                        "name": "service_name",
                         "in": "query"
                     }
                 ],
@@ -311,11 +311,11 @@ const docTemplate = `{
                 "end_date": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "price": {
                     "type": "integer"
+                },
+                "service_name": {
+                    "type": "string"
                 },
                 "start_date": {
                     "type": "string"
@@ -334,11 +334,11 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "price": {
                     "type": "integer"
+                },
+                "service_name": {
+                    "type": "string"
                 },
                 "start_date": {
                     "type": "string"

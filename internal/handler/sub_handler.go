@@ -70,11 +70,11 @@ func (h *SubHandler) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sub := model.Subscription{
-		Name:      req.Name,
-		Price:     req.Price,
-		UserID:    req.UserID,
-		StartDate: req.StartDate,
-		EndDate:   req.EndDate,
+		ServiceName: req.ServiceName,
+		Price:       req.Price,
+		UserID:      req.UserID,
+		StartDate:   req.StartDate,
+		EndDate:     req.EndDate,
 	}
 
 	if err := h.srv.Create(&sub); err != nil {
@@ -192,11 +192,11 @@ func (h *SubHandler) update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sub := model.Subscription{
-		Name:      req.Name,
-		Price:     req.Price,
-		UserID:    req.UserID,
-		StartDate: req.StartDate,
-		EndDate:   req.EndDate,
+		ServiceName: req.ServiceName,
+		Price:       req.Price,
+		UserID:      req.UserID,
+		StartDate:   req.StartDate,
+		EndDate:     req.EndDate,
 	}
 
 	newSub, err := h.srv.Update(id, &sub)
@@ -258,13 +258,13 @@ func (h *SubHandler) delete(w http.ResponseWriter, r *http.Request) {
 // @Description	Get the total cost of subscriptions for a given period. Optional filters for user and subscription name
 // @Tags		Subscriptions
 // @Produce		json
-// @Param		start_date	query		string				true	"Start date of the period (MM-YYYY)"	Example("01-2025")
-// @Param		end_date	query		string				true	"End date of the period (MM-YYYY)"		Example("12-2025")
-// @Param		user_id		query		string				false	"Filter by User ID (UUID)"				format(uuid)
-// @Param		name		query		string				false	"Filter by subscription name"
-// @Success		200			{object}	map[string]int		"Total sum"
-// @Failure		400			{object}	utils.ErrorResponse	"Invalid parameters"
-// @Failure		500			{object}	utils.ErrorResponse	"Internal server error"
+// @Param		start_date		query		string				true	"Start date of the period (MM-YYYY)"	Example("01-2025")
+// @Param		end_date		query		string				true	"End date of the period (MM-YYYY)"		Example("12-2025")
+// @Param		user_id			query		string				false	"Filter by User ID (UUID)"				format(uuid)
+// @Param		service_name	query		string				false	"Filter by subscription name"
+// @Success		200				{object}	map[string]int		"Total sum"
+// @Failure		400				{object}	utils.ErrorResponse	"Invalid parameters"
+// @Failure		500				{object}	utils.ErrorResponse	"Internal server error"
 // @Router		/subscriptions/total [get]
 func (h *SubHandler) totalSum(w http.ResponseWriter, r *http.Request) {
 	h.logger.Println("GET total sum of subscriptions request")
@@ -273,7 +273,7 @@ func (h *SubHandler) totalSum(w http.ResponseWriter, r *http.Request) {
 	startDate := params.Get("start_date")
 	endDate := params.Get("end_date")
 	userID := params.Get("user_id")
-	name := params.Get("name")
+	name := params.Get("service_name")
 
 	var id uuid.UUID
 	if userID != "" {

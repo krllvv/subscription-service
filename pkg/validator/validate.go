@@ -11,7 +11,7 @@ import (
 func ValidateSubRequest(req model.SubRequest) []string {
 	var errors []string
 
-	if req.Name == "" {
+	if req.ServiceName == "" {
 		errors = append(errors, "name is required")
 	}
 

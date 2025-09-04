@@ -50,8 +50,8 @@ func (r *SubPostgresRepository) Create(sub *model.Subscription) error {
 	}
 
 	_, err := r.db.Exec(
-		"INSERT INTO subs (id, name, price, user_id, start_date, end_date) VALUES ($1, $2, $3, $4, $5, $6)",
-		sub.ID, sub.Name, sub.Price, sub.UserID, sub.StartDate, sub.EndDate,
+		"INSERT INTO subs (id, service_name, price, user_id, start_date, end_date) VALUES ($1, $2, $3, $4, $5, $6)",
+		sub.ID, sub.ServiceName, sub.Price, sub.UserID, sub.StartDate, sub.EndDate,
 	)
 	if err != nil {
 		r.logger.Println("Failed to create subscription:", err)
@@ -66,8 +66,8 @@ func (r *SubPostgresRepository) GetByID(id uuid.UUID) (*model.Subscription, erro
 	sub := &model.Subscription{}
 
 	err := r.db.
-		QueryRow("SELECT id, name, price, user_id, start_date, end_date FROM subs WHERE id = $1", id).
-		Scan(&sub.ID, &sub.Name, &sub.Price, &sub.UserID, &sub.StartDate, &sub.EndDate)
+		QueryRow("SELECT id, service_name, price, user_id, start_date, end_date FROM subs WHERE id = $1", id).
+		Scan(&sub.ID, &sub.ServiceName, &sub.Price, &sub.UserID, &sub.StartDate, &sub.EndDate)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -84,8 +84,8 @@ func (r *SubPostgresRepository) GetByID(id uuid.UUID) (*model.Subscription, erro
 
 func (r *SubPostgresRepository) Update(id uuid.UUID, sub *model.Subscription) error {
 	res, err := r.db.Exec(
-		"UPDATE subs SET name = $1, price = $2, user_id = $3, start_date = $4, end_date = $5 WHERE id = $6",
-		sub.Name, sub.Price, sub.UserID, sub.StartDate, sub.EndDate, id,
+		"UPDATE subs SET service_name = $1, price = $2, user_id = $3, start_date = $4, end_date = $5 WHERE id = $6",
+		sub.ServiceName, sub.Price, sub.UserID, sub.StartDate, sub.EndDate, id,
 	)
 
 	if err != nil {
@@ -129,7 +129,7 @@ func (r *SubPostgresRepository) Delete(id uuid.UUID) error {
 }
 
 func (r *SubPostgresRepository) GetAll() ([]model.Subscription, error) {
-	rows, err := r.db.Query("SELECT id, name, price, user_id, start_date, end_date FROM subs")
+	rows, err := r.db.Query("SELECT id, service_name, price, user_id, start_date, end_date FROM subs")
 	if err != nil {
 		r.logger.Println("Failed to get all subscriptions:", err)
 		return nil, ErrDatabase
@@ -139,7 +139,7 @@ func (r *SubPostgresRepository) GetAll() ([]model.Subscription, error) {
 	subs := make([]model.Subscription, 0)
 	for rows.Next() {
 		var sub model.Subscription
-		err = rows.Scan(&sub.ID, &sub.Name, &sub.Price, &sub.UserID, &sub.StartDate, &sub.EndDate)
+		err = rows.Scan(&sub.ID, &sub.ServiceName, &sub.Price, &sub.UserID, &sub.StartDate, &sub.EndDate)
 		if err != nil {
 			r.logger.Println("Failed to scan row while getting subscriptions", err)
 			return nil, ErrDatabase
@@ -170,7 +170,7 @@ func (r *SubPostgresRepository) GetTotalSum(start, end string, userID uuid.UUID,
 	}
 
 	if name != "" {
-		conditions = append(conditions, fmt.Sprintf("name = $%d", len(args)+1))
+		conditions = append(conditions, fmt.Sprintf("service_name = $%d", len(args)+1))
 		args = append(args, name)
 	}
 
